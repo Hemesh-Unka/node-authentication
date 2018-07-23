@@ -1,10 +1,10 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
+import { createConnection } from "typeorm";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import {Request, Response} from "express";
-import {Routes} from "./routes";
-import {User} from "./entity/User";
+import { Request, Response } from "express";
+import { Routes } from "./routes";
+import { User } from "./entity/User";
 
 createConnection().then(async connection => {
 
@@ -17,9 +17,13 @@ createConnection().then(async connection => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
             const result = (new (route.controller as any))[route.action](req, res, next);
             if (result instanceof Promise) {
-                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined);
-
+                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined).catch((e) => {
+                    res
+                        .status(400)
+                        .send(e)
+                })
             } else if (result !== null && result !== undefined) {
+                console.log('I am here in the other branch of if')
                 res.json(result);
             }
         });
@@ -43,4 +47,4 @@ createConnection().then(async connection => {
 
     console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
 
-}).catch(error => console.log(error));
+}).catch(error => console.log('dkldsakjdskjsdakjsdakjlsdakdsakjsdakljdsalkj', error));
