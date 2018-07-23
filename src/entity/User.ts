@@ -7,21 +7,9 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    firstName: string;
-
-    @Column()
-    lastName: string;
-
-    @Column()
-    age: number;
-
     @Column({ unique: true })
     @IsEmail()
     email: string;
-
-    @Column()
-    username: string;
 
     @Column({ select: false})
     @Length(6)
