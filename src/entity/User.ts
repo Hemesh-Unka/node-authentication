@@ -15,3 +15,5 @@ export class User {
     @Length(6)
     password: string;
 }
+
+    
