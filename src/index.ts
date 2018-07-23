@@ -23,7 +23,6 @@ createConnection().then(async connection => {
                         .send(e)
                 })
             } else if (result !== null && result !== undefined) {
-                console.log('I am here in the other branch of if')
                 res.json(result);
             }
         });
