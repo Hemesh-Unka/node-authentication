@@ -15,7 +15,6 @@ export class UserController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        console.log('just above the save request');
         return this.userRepository.save(request.body);
     }
 
