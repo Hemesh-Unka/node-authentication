@@ -17,13 +17,29 @@ createConnection().then(async connection => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
             const result = (new (route.controller as any))[route.action](req, res, next);
             if (result instanceof Promise) {
-                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined).catch((e) => {
+                result.then((result) => {
+                    if (result !== null && result !== undefined) {
+                        // A promise, but does not have a error
+                        res
+                            .header('X-auth', result.access_token)
+                            .status(200)
+                            .send(result);
+                    } else {
+                        undefined;
+                    }
+                }).catch((e) => {
+                    // Is a promise, but it is an error
                     res
                         .status(400)
                         .send(e)
                 })
             } else if (result !== null && result !== undefined) {
-                res.json(result);
+                // Not a promise
+
+                res
+                    .header('X-auth', 'hi')
+                    .status(200)
+                    .json(result);
             }
         });
     });
