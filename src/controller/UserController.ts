@@ -21,13 +21,12 @@ export class UserController {
         // request.body.password = hashedPassword;
         // FIX: Needed to create user/then save
 
-        const user = this.userRepository.create(request.body);
-        return this.userRepository.save(user);
+        let user = this.userRepository.create(request.body);
+        return await this.userRepository.save(user);
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
         let userToRemove = await this.userRepository.findOne(request.params.id);
         await this.userRepository.remove(userToRemove);
     }
-
 }
