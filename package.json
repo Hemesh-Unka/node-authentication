@@ -23,7 +23,6 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev src/index.ts",
-    "hash": "ts-node-dev playground/hashing.ts"
+    "dev": "ts-node-dev src/index.ts"
   }
 }
