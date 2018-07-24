@@ -1,7 +1,6 @@
 import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { User } from "../entity/User";
-import * as bcrypt from 'bcryptjs';
 
 export class UserController {
 
@@ -17,9 +16,14 @@ export class UserController {
 
     async save(request: Request, response: Response, next: NextFunction) {
         // these models should be extracted into a model class
-        const hashedPassword = await bcrypt.hash(request.body.password, 10);
-        request.body.password = hashedPassword;
-        return this.userRepository.save(request.body);
+        // this also can be removed and put as a hook before an input into the db
+        // ISSUE: when password was saved in another route - ie '/' route - password would be stored in plain-text
+        // FIX: Needed to create user/then save
+
+        const user = this.userRepository.create(request.body);
+        // const hashedPassword = await bcrypt.hash(request.body.password, 10);
+        // request.body.password = hashedPassword;
+        return this.userRepository.save(user);
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {

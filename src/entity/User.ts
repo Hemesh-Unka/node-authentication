@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { IsEmail, Length } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { IsEmail } from "class-validator";
+import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class User {
@@ -11,9 +12,12 @@ export class User {
     @IsEmail()
     email: string;
 
-    @Column({ select: false})
-    @Length(6)
+    @Column()
     password: string;
-}
 
-    
+    @BeforeInsert()
+    async hashAndSaltPassword() {
+        console.log('This hashing the password');
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+}
