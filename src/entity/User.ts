@@ -17,7 +17,6 @@ export class User {
 
     @BeforeInsert()
     async hashAndSaltPassword() {
-        console.log('This hashing the password');
         this.password = await bcrypt.hash(this.password, 10);
     }
 }
