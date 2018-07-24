@@ -9,7 +9,8 @@ export = [
     "password": process.env.DB_PASSWORD,
     "database": "test",
     "synchronize": true,
-    "logging": false,
+    "dropSchema": true,
+    "logging": true,
     "entities": [
       "src/entity/**/*.ts"
     ],
