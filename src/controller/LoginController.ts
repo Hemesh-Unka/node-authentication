@@ -2,7 +2,7 @@ import { getRepository } from "../../node_modules/typeorm";
 import { User } from "../entity/User";
 import { NextFunction, Request, Response } from "express";
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import * as JWT from 'jsonwebtoken';
 
 export class LoginController {
   private userRespository = getRepository(User);
@@ -26,7 +26,12 @@ export class LoginController {
     };
 
     // If password is matching then send JWT Token
-    let token = jwt.sign({ uuid: user.uuid }, process.env.SECRET, { expiresIn: "1h" })
+    const token = JWT.sign({
+      iss: 'API',
+      sub: user.uuid,
+      iat: new Date().getTime(),
+      exp: new Date().setDate(new Date().getDate() + 1)
+    }, process.env.SECRET);
 
     // Return a token
     return {
