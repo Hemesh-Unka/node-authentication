@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as morgran from "morgan";
 import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { User } from "./entity/User";
@@ -11,6 +12,7 @@ createConnection().then(async connection => {
     // create express app
     const app = express();
     app.use(bodyParser.json());
+    app.use(morgran('dev'));
 
     // register express routes from defined application routes
     Routes.forEach(route => {
@@ -52,7 +54,7 @@ createConnection().then(async connection => {
         email: "timbersaw@isemail.com",
         password: "timbersaw123"
     }));
-    
+
     await connection.manager.save(connection.manager.create(User, {
         email: "phantomassassin",
         password: "phantomassaasin123"

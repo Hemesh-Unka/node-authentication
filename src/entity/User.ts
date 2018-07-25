@@ -1,7 +1,6 @@
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
 
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, AfterInsert, Generated } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, Generated } from "typeorm";
 import { IsEmail } from "class-validator";
 
 @Entity()
@@ -18,7 +17,7 @@ export class User {
     @IsEmail()
     email: string;
 
-    @Column()
+    @Column({ select: true })
     password: string;
 
     @Column({ nullable: true })
