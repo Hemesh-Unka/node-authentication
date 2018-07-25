@@ -25,6 +25,7 @@ createConnection().then(async connection => {
                             .status(200)
                             .send(result);
                     } else {
+                        // A promise, but does have a error
                         undefined;
                     }
                 }).catch((e) => {
@@ -35,18 +36,14 @@ createConnection().then(async connection => {
                 })
             } else if (result !== null && result !== undefined) {
                 // Not a promise
-
                 res
-                    .header('X-auth', 'hi')
+                    .header('X-auth', 'result')
                     .status(200)
                     .json(result);
             }
         });
     });
-
-    // setup express app here
-    // ...
-
+    
     // start express server
     app.listen(3000);
 

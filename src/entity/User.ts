@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, Generated, AfterInsert } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, AfterInsert, Generated } from "typeorm";
 import { IsEmail } from "class-validator";
 
 @Entity()
@@ -28,13 +28,14 @@ export class User {
     async hashAndSaltPassword() {
         this.password = await bcrypt.hash(this.password, 10);
     }
-
-    @BeforeInsert()
-    async genAuthToken() {
-        const expiresIn = 60 * 60;
-        const access = 'auth';
-        const secretOrKey = process.env.SECRET
-
-        this.access_token = await jwt.sign({ uuid: this.uuid, access }, secretOrKey, { expiresIn: expiresIn });
-    }
 }
+
+// TODO: This code is not working, it seems like it only makes a commit and does not start any transactions
+//     @AfterInsert()
+//     genAuthToken() {
+//         const expiresIn = 60 * 60;
+//         const access = 'auth';
+//         const secretOrKey = process.env.SECRET
+//         const token = await jwt.sign({ uuid: this.uuid, access }, secretOrKey, { expiresIn: expiresIn });
+//     }
+// }
