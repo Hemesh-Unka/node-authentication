@@ -43,7 +43,7 @@ createConnection().then(async connection => {
             }
         });
     });
-    
+
     // start express server
     app.listen(3000);
 
@@ -52,6 +52,7 @@ createConnection().then(async connection => {
         email: "timbersaw@isemail.com",
         password: "timbersaw123"
     }));
+    
     await connection.manager.save(connection.manager.create(User, {
         email: "phantomassassin",
         password: "phantomassaasin123"
