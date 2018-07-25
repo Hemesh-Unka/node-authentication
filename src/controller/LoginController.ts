@@ -31,7 +31,7 @@ export class LoginController {
     // Return a token
     return {
       auth: true,
-      token: token
+      token
     };
   };
 };
