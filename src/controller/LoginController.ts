@@ -33,5 +33,5 @@ export class LoginController {
       auth: true,
       token: token
     };
-  }
-}
+  };
+};
