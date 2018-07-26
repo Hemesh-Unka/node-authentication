@@ -14,7 +14,7 @@ export class Routes {
 
     public routes(app): void {
         app.route('/login')
-            .post(this.loginController.login);
+            .post(passport.authenticate('local', { session: false}), this.loginController.login);
 
         app.route('/logout')
             .get(this.logoutController.logout);

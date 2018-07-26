@@ -10,15 +10,15 @@ createConnection().then(async connection => {
     console.log(`Express server has started on port ${PORT}.`);
   });
 
-  // Set up some test users
-  await connection.manager.save(connection.manager.create(User, {
-    email: "timbersaw@isemail.com",
-    password: "timbersaw123"
-  }));
+  // // Set up some test users
+  // await connection.manager.save(connection.manager.create(User, {
+  //   email: "timbersaw@isemail.com",
+  //   password: "timbersaw123"
+  // }));
 
-  await connection.manager.save(connection.manager.create(User, {
-    email: "phantomassassin",
-    password: "phantomassaasin123"
-  }));
+  // await connection.manager.save(connection.manager.create(User, {
+  //   email: "phantomassassin",
+  //   password: "phantomassaasin123"
+  // }));
 
-}).catch(e => console.log(e)); 
+}).catch(e => console.log(e));

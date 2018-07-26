@@ -27,14 +27,12 @@ export class User {
     async hashAndSaltPassword() {
         this.password = await bcrypt.hash(this.password, 10);
     }
-}
 
-// TODO: This code is not working, it seems like it only makes a commit and does not start any transactions
-//     @AfterInsert()
-//     genAuthToken() {
-//         const expiresIn = 60 * 60;
-//         const access = 'auth';
-//         const secretOrKey = process.env.SECRET
-//         const token = await jwt.sign({ uuid: this.uuid, access }, secretOrKey, { expiresIn: expiresIn });
-//     }
-// }
+    async validatePassword(plainTextPassword: string) {
+        try {
+            return await bcrypt.compare(plainTextPassword, this.password)
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+}
