@@ -6,34 +6,44 @@ import { User } from "../entity/User";
 
 
 export class RegisterController {
-  private userRespository = getRepository(User);
 
   async register(request: Request, response: Response, next: NextFunction) {
-    const { email, password } = request.body;
+    try {
+      // Get user repository
+      const userRespository = getRepository(User);
 
-    // Check if existing user exists
-    const foundUser = await this.userRespository.findOne({ email });
+      const { email, password } = request.body;
 
-    if (foundUser) throw ({
-      error: 'Email is already in use'
-    })
+      // Check if existing user exists
+      const foundUser = await userRespository.findOne({ email });
 
-    // Create a new user
-    const user = this.userRespository.create({ email, password });
-    await this.userRespository.save(user);
+      if (foundUser) throw ({
+        error: 'Email is already in use'
+      })
 
-    // Setup token
-    const token = JWT.sign({
-      iss: 'API',
-      sub: user.uuid,
-      iat: new Date().getTime(),
-      exp: new Date().setDate(new Date().getDate() + 1)
-    }, process.env.SECRET);
-  
-    // Respond with token
-    return {
-      auth: true,
-      token
-    };
+      // Create a new user
+      const user = userRespository.create({ email, password });
+      await userRespository.save(user);
+
+      // Setup token
+      const token = JWT.sign({
+        iss: 'API',
+        sub: user.uuid,
+        iat: new Date().getTime(),
+        exp: new Date().setDate(new Date().getDate() + 1)
+      }, process.env.SECRET);
+
+      // Respond with token
+      response
+      .send({
+        auth: true,
+        token
+      });
+
+    } catch (e) {
+      response
+        .status(404)
+        .send(e)
+    }
   };
 };

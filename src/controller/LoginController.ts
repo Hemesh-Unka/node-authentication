@@ -5,38 +5,43 @@ import * as bcrypt from 'bcryptjs';
 import * as JWT from 'jsonwebtoken';
 
 export class LoginController {
-  private userRespository = getRepository(User);
 
-  async login(request: Request, response: Response, next: NextFunction) {
-    let user = await this.userRespository.findOne({ email: request.body.email });
+  public async login(request: Request, response: Response, next: NextFunction) {
+    try {
+      // Get user repository
+      const userRespository = getRepository(User);
 
-    // Check if user is found
-    if (!user) return {
-      auth: false,
-      token: null
-    };
+      // Find the user
+      let user = await userRespository.findOne({ email: request.body.email });
 
-    // User is found, now lets check if passwords match
-    let passwordIsValid = bcrypt.compareSync(request.body.password, user.password);
+      // Check if user is found
+      if (!user) throw {
+        auth: false,
+        token: null
+      };
 
-    // Check if password is matching
-    if (!passwordIsValid) return {
-      auth: false,
-      token: null
-    };
+      // Password matching step?
 
-    // If password is matching then send JWT Token
-    const token = JWT.sign({
-      iss: 'API',
-      sub: user.uuid,
-      iat: new Date().getTime(),
-      exp: new Date().setDate(new Date().getDate() + 1)
-    }, process.env.SECRET);
+      // If password is matching then send JWT Token
+      const token = JWT.sign({
+        iss: 'API',
+        sub: user.uuid,
+        iat: new Date().getTime(),
+        exp: new Date().setDate(new Date().getDate() + 1)
+      }, process.env.SECRET);
 
-    // Return a token
-    return {
-      auth: true,
-      token
-    };
-  };
+      // Return a token
+      response
+      .status(200)
+      .send({
+        auth: true,
+        token
+      });
+
+    } catch (e) {
+      response
+        .status(400)
+        .send(e)
+    }
+  }
 };

@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 
 export class LogoutController {
   async logout(request: Request, response: Response, next: NextFunction) {
-    return {
-      auth: false,
-      token: null
-    }
+    response
+      .status(200)
+      .send({
+        auth: false,
+        token: null
+      })
   }
 }
