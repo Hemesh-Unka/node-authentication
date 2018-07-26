@@ -4,7 +4,6 @@ import * as JWT from 'jsonwebtoken';
 
 import { User } from "../entity/User";
 
-
 export class RegisterController {
 
   async register(request: Request, response: Response, next: NextFunction) {
