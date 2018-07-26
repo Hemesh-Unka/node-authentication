@@ -1,5 +1,3 @@
-import { getRepository } from "../../node_modules/typeorm";
-import { User } from "../entity/User";
 import { NextFunction, Request, Response } from "express";
 import * as JWT from 'jsonwebtoken';
 
