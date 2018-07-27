@@ -6,3 +6,5 @@ tmp/
 temp/
 .env
 playground/
+src/config/cert.pem
+src/config/key.pem
