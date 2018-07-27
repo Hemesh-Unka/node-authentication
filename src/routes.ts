@@ -14,7 +14,7 @@ export class Routes {
 
     public routes(app): void {
         app.route('/login')
-            .post(passport.authenticate('local', { session: false}), this.loginController.login);
+            .post(passport.authenticate('local', { session: false }), this.loginController.login);
 
         app.route('/logout')
             .get(this.logoutController.logout);
@@ -23,6 +23,7 @@ export class Routes {
             .post(this.registerController.register);
 
         app.route('/users')
-            .get(passport.authenticate('jwt', { session: false }), this.userController.all);
+            .get(passport.authenticate('jwt', { session: false }), this.userController.all)
+            .put(passport.authenticate('jwt', {session: false}), this.userController.edit)
     }
 }
