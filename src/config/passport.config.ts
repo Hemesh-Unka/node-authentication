@@ -28,7 +28,7 @@ passport.use(new passportJWT.Strategy({
 
 passport.use(new passportLocal.Strategy({
   usernameField: 'email'
-}, async (email, password, done) => {
+}, async (email: string, password: string, next: any) => {
   
   try {
     // Find the user from the email
@@ -36,7 +36,7 @@ passport.use(new passportLocal.Strategy({
 
     // If user does not exist
     if (!user) {
-      return done(null, false, { message: 'Incorrect username.' });
+      return next(null, false, { message: 'Incorrect username.' });
     };
 
     // Check if password is correct
@@ -44,13 +44,13 @@ passport.use(new passportLocal.Strategy({
 
     // If not correct password
     if (!isMatch) {
-      return done(null, false, { message: 'Incorrect password.' });
+      return next(null, false, { message: 'Incorrect password.' });
     }
 
     // Return the user
-    done(null, user);
+    next(null, user);
 
   } catch (error) {
-    done(error, null);
+    next(error, null);
   }
 }));
