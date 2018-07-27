@@ -1,7 +1,8 @@
 import * as bcrypt from 'bcryptjs';
 
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, Generated } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Generated } from "typeorm";
 import { IsEmail } from "class-validator";
+import { timingSafeEqual } from 'crypto';
 
 @Entity()
 export class User {
@@ -22,7 +23,12 @@ export class User {
 
     @BeforeInsert()
     async hashAndSaltPassword() {
-        this.password = await bcrypt.hash(this.password, 14);
+        this.password = await bcrypt.hash(this.password, 15);
+    }
+
+    @BeforeUpdate()
+    async updateHashAndSaltPassword() {
+        this.password = await bcrypt.hash(this.password, 15);
     }
 
     async validatePassword(plainTextPassword: string) {
