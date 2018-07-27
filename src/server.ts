@@ -1,12 +1,21 @@
 import app from './app';
+import * as https from 'https';
+import * as fs from 'fs';
+import * as path from 'path';
 import { createConnection } from "typeorm";
-import { User } from "./entity/User"
 
 const PORT: number = 3000;
 
+console.log(__dirname);
+
+const httpsOptions: object = {
+  key: fs.readFileSync(path.join(__dirname, './config/key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, './config/cert.pem'))
+};
+
 createConnection().then(async connection => {
   console.log('TypeORM connection created.')
-  app.listen(PORT, () => {
+  https.createServer(httpsOptions, app).listen(PORT, () => {
     console.log(`Express server has started on port ${PORT}.`);
   });
 
