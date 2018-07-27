@@ -17,7 +17,7 @@ export class RegisterController {
       const foundUser = await userRespository.findOne({ email });
 
       if (foundUser) throw ({
-        error: 'Email is already in use'
+        error: 'Email is already in use.'
       })
 
       // Create a new user
