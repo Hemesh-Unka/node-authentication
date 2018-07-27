@@ -22,7 +22,7 @@ export class User {
 
     @BeforeInsert()
     async hashAndSaltPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
+        this.password = await bcrypt.hash(this.password, 14);
     }
 
     async validatePassword(plainTextPassword: string) {
