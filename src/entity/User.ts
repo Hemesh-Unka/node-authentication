@@ -17,11 +17,8 @@ export class User {
     @IsEmail()
     email: string;
 
-    @Column({ select: true })
+    @Column()
     password: string;
-
-    @Column({ nullable: true })
-    access_token: string;
 
     @BeforeInsert()
     async hashAndSaltPassword() {
