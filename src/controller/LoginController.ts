@@ -5,6 +5,7 @@ export class LoginController {
 
   public async login(request: Request, response: Response, next: NextFunction) {
     try {
+      
       // Generate a token
       const token = JWT.sign({
         iss: 'API',
