@@ -6,8 +6,6 @@ import { createConnection } from "typeorm";
 
 const PORT: number = 3000;
 
-console.log(__dirname);
-
 const httpsOptions: object = {
   key: fs.readFileSync(path.join(__dirname, './config/key.pem')),
   cert: fs.readFileSync(path.join(__dirname, './config/cert.pem'))
