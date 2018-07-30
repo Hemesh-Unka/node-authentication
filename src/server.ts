@@ -12,7 +12,7 @@ const httpsOptions: object = {
 };
 
 createConnection().then(async connection => {
-  console.log('TypeORM connection created.')
+  console.log(`TypeORM connection created on port ${process.env.DB_PORT}.`)
   https.createServer(httpsOptions, app).listen(PORT, () => {
     console.log(`Express server has started on port ${PORT}.`);
   });
