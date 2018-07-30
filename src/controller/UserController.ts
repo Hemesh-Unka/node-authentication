@@ -26,7 +26,8 @@ export class UserController {
             if (!userToUpdate) throw ({ error: 'Email does not exist.' });
 
             // If the requested user to edit is not able to edit (This maybe fixed by access control lists)            
-            if ((!userToUpdate === request.user)) throw ({ error: 'Unable to edit another user' });
+            // Need to go over this to check it out once again
+            if (userToUpdate.uuid !== request.user.uuid) throw ({ error: 'Unable to edit another user' });
 
             // Edit the user
             userToUpdate.email = request.body.email;
