@@ -26,7 +26,7 @@ export class Routes {
             .post(this.registerController.register);
 
         app.route('/users')
-            .get(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['admin', 'superadmin']), this.userController.all)
-            .put(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['superadmin', 'admin', 'member']), this.userController.edit)
+            .get(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['admin', 'superadmin'], 'read'), this.userController.all)
+            .put(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['superadmin', 'admin', 'member'], 'update'), this.userController.edit)
     }
 }

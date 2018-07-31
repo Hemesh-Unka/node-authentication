@@ -6,16 +6,16 @@ export class RoleMiddleware {
     // General public / API
     guest: {
       account: {
-        'create:own': ['*']
+        'update:any': ['*']
       }
     },
 
     // User from Client (Employee)
     member: {
       account: {
-        'read:own': ['*'],
-        'update:own': ['*'],
-        'delete:own': ['*']
+        'read:any': ['*'],
+        'update:any': ['*'],
+        'delete:any': ['*']
       }
     },
 
@@ -42,7 +42,7 @@ export class RoleMiddleware {
 
   private ac: AccessControl = new AccessControl(this.grants);
 
-  public permit(permitted) {
+  public permit(permitted: Array<string>, requestType: string) {
     return async (request: Request, response: Response, next: NextFunction) => {
       try {
         // Get the current user
@@ -52,7 +52,7 @@ export class RoleMiddleware {
         if (!permitted.includes(request.user.role)) { throw ({ error: 'Unauthorized request' }) };
 
         // Compare the user role vs. route roles
-        const permission = this.ac.can(user.role).readAny('account')
+        const permission = this.ac.can(user.role)[requestType]('account')
 
         // If user does not have permission
         if (!permission.granted) {
