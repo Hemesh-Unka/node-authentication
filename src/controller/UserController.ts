@@ -1,5 +1,5 @@
-import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
+import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 
 export class UserController {
@@ -18,6 +18,7 @@ export class UserController {
     }
 
     async edit(request: Request, response: Response, next: NextFunction) {
+
         try {
             // Find the user
             let userToUpdate = await getRepository(User).findOne({ email: request.body.email });
