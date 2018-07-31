@@ -3,17 +3,24 @@ import * as https from 'https';
 import * as fs from 'fs';
 import * as path from 'path';
 import { createConnection } from "typeorm";
+import { create } from 'domain';
 
 const PORT: number = 3000;
 
-const httpsOptions: object = {
-  key: fs.readFileSync(path.join(__dirname, './config/key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, './config/cert.pem'))
-};
+// const httpsOptions: object = {
+//   key: fs.readFileSync(path.join(__dirname, './config/key.pem')),
+//   cert: fs.readFileSync(path.join(__dirname, './config/cert.pem'))
+// };
 
 createConnection().then(async connection => {
   console.log(`TypeORM connection created on port ${process.env.DB_PORT}.`)
-  https.createServer(httpsOptions, app).listen(PORT, () => {
+
+  // Https server setup
+  // https.createServer(httpsOptions, app).listen(PORT, () => {
+  //   console.log(`Express server has started on port ${PORT}.`);
+  // });
+
+  app.listen(PORT, () => {
     console.log(`Express server has started on port ${PORT}.`);
   });
 
