@@ -1,5 +1,7 @@
 # Node API Authentication
 
+A small express app to research and test out implementing some Node API security techniques.
+
 Steps to run this project:
 
 1. Run `npm i` command
