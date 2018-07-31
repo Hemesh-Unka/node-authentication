@@ -2,7 +2,6 @@ import * as bcrypt from 'bcryptjs';
 
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Generated } from "typeorm";
 import { IsEmail } from "class-validator";
-import { timingSafeEqual } from 'crypto';
 
 @Entity()
 export class User {
@@ -20,6 +19,9 @@ export class User {
 
     @Column()
     password: string;
+
+    @Column({default: 'member'})
+    role: string;
 
     @BeforeInsert()
     async hashAndSaltPassword() {

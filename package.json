@@ -15,6 +15,7 @@
     "typescript": "2.5.2"
   },
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.1",
     "class-validator": "^0.9.1",
