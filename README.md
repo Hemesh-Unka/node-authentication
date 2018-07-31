@@ -1,10 +1,12 @@
-# Awesome Project Build with TypeORM
-        
+# Node API Authentication
+
 Steps to run this project:
 
 1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+2. Ensure you have `postgress` installed locally
+2. Add a .env file in the home directory with the following (DB_HOST, DB_PORT, DB_USERNAME, DB_Password) and SECRET (JWT secret string).
+3. Run `npm run dev` command
+4. Visit `localhost:3000/users` with postman
 
 # Good resources
 - https://www.youtube.com/watch?v=zx6jnaLuB9Q (Video tutorial)
