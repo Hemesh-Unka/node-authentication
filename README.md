@@ -6,7 +6,7 @@ Steps to run this project:
 
 1. Run `npm i` command
 2. Ensure you have `postgress` installed locally
-2. Add a .env file in the home directory with the following (DB_HOST, DB_PORT, DB_USERNAME, DB_Password) and SECRET (JWT secret string).
+2. Add a .env file in the home directory with the following (DB_HOST, DB_PORT, DB_USERNAME, DB_Password) and JWT_SECRET (JWT JWT_SECRET string).
 3. Run `npm run dev` command
 4. Visit `localhost:3000/users` with postman
 

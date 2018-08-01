@@ -66,6 +66,6 @@ export class UserController {
     // }
 
     // async findByToken(token) {
-    //     console.log(jwt.verify(token, process.env.SECRET));
+    //     console.log(jwt.verify(token, process.env.JWT_SECRET));
     // }
 }

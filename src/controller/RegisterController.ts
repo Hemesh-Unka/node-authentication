@@ -30,7 +30,7 @@ export class RegisterController {
         sub: user.uuid,
         iat: new Date().getTime(),
         exp: new Date().setDate(new Date().getDate() + 1)
-      }, process.env.SECRET);
+      }, process.env.JWT_SECRET);
 
       // Respond with token
       response
