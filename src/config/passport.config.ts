@@ -7,7 +7,7 @@ import { User } from '../entity/User';
 
 passport.use(new passportJWT.Strategy({
   jwtFromRequest: passportJWT.ExtractJwt.fromHeader('authorization'),
-  secretOrKey: process.env.SECRET
+  secretOrKey: process.env.JWT_SECRET
 }, async (payload: any, next: any) => {
   
   try {

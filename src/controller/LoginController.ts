@@ -12,7 +12,7 @@ export class LoginController {
         sub: request.user.uuid,
         iat: new Date().getTime(),
         exp: new Date().setDate(new Date().getDate() + 1)
-      }, process.env.SECRET);
+      }, process.env.JWT_SECRET);
 
       // Return a token
       response
