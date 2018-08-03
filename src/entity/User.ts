@@ -1,7 +1,9 @@
 import * as bcrypt from 'bcryptjs';
 
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Generated } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Generated, ManyToOne } from "typeorm";
 import { IsEmail } from "class-validator";
+
+import { Role } from './Role';
 
 @Entity()
 export class User {
@@ -20,8 +22,8 @@ export class User {
     @Column()
     password: string;
 
-    @Column({default: 'member'})
-    role: string;
+    @ManyToOne(type => Role, role => role.users, { cascade: true })
+    role: Role;
 
     @BeforeInsert()
     async hashAndSaltPassword() {

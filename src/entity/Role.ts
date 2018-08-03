@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany } from "typeorm";
+
 import { Rule } from './Rule';
+import { User } from "./User";
 
 @Entity()
 export class Role {
-  // A role has multiple rules - True
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,6 +12,9 @@ export class Role {
   // Superadmin, client, user, guest
   @Column()
   role_name: string;
+
+  @OneToMany(type => User, user => user.role)
+  users: User[];
 
   @ManyToMany(type => Rule, rule => rule.roles)
   @JoinTable()

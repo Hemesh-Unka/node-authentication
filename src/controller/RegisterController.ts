@@ -3,25 +3,35 @@ import { getRepository } from "typeorm";
 import * as JWT from 'jsonwebtoken';
 
 import { User } from "../entity/User";
+import { Role } from "../entity/Role";
 
 export class RegisterController {
 
   async register(request: Request, response: Response, next: NextFunction) {
     try {
+      // Setting individual constants
+      const { email, password, assigned_role } = request.body;
+
       // Get user repository
       const userRespository = getRepository(User);
 
-      const { email, password } = request.body;
+      // Get role repository
+      const roleRepository = getRepository(Role);
 
       // Check if existing user exists
-      const foundUser = await userRespository.findOne({ email });
-
-      if (foundUser) throw ({
-        error: 'Email is already in use.'
-      })
+      const existingUser = await userRespository.findOne({ email });
+      if (existingUser) throw ({ error: 'Email is already in use.' })
 
       // Create a new user
       const user = userRespository.create({ email, password });
+
+      // Create a new role
+      const role = roleRepository.create({ role_name: assigned_role });
+
+      // Assign the role to a user
+      user.role = role;
+
+      // Save user
       await userRespository.save(user);
 
       // Setup token
@@ -34,10 +44,10 @@ export class RegisterController {
 
       // Respond with token
       response
-      .send({
-        auth: true,
-        token
-      });
+        .send({
+          auth: true,
+          token
+        });
 
     } catch (e) {
       response
