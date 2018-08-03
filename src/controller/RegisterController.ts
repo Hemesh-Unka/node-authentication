@@ -28,8 +28,15 @@ export class RegisterController {
       // Create a new role
       const role = roleRepository.create({ role_name: assigned_role });
 
-      // Assign the role to a user
-      user.role = role;
+      // Check if role has already been created
+      const existingRole = await roleRepository.findOne({ role_name: assigned_role });
+
+      if (existingRole) {
+        user.role = existingRole;
+      } else {
+        // Assign the role to a user
+        user.role = role;
+      };
 
       // Save user
       await userRespository.save(user);
