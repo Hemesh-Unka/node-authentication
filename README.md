@@ -18,3 +18,4 @@ Steps to run this project:
 
 # Known bugs
 - On creating a role, it will create more than one of the same. This is the same with rules. What I would like to acheieve is a one to one relationship.
+- One creating a new user, a new role will be created. What I want to acheive is that when you create one user it links upto the corresponding role.
