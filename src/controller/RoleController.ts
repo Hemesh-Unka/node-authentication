@@ -35,16 +35,22 @@ export class RoleController {
       const roleRepository = getRepository(Role);
       const ruleRepository = getRepository(Rule);
 
-      // Create and save a new role
+      // Create a new role
       const role = await roleRepository.create({ role_name });
-      await roleRepository.save(role);
 
       // Create a new rule
       const rule = await ruleRepository.create({ resource: resource, action: action, attributes: attributes })
 
-      // Add rules to roles
-      rule.roles = [role];
-      
+      // Check if role already exists
+      const existingRole = await roleRepository.findOne({ role_name });
+
+      if (existingRole) {
+        rule.roles = [existingRole];
+      } else {
+        await roleRepository.save(role);
+        rule.roles = [role];
+      }
+
       // Save the rule
       await ruleRepository.save(rule);
 
