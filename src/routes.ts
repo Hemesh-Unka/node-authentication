@@ -2,10 +2,13 @@ import { LoginController } from './controller/LoginController';
 import { LogoutController } from './controller/LogoutController';
 import { RegisterController } from "./controller/RegisterController";
 import { UserController } from './controller/UserController';
+import { RoleMiddleware } from './config/app.roles';
+import { RoleController } from './controller/RoleController';
+import { ItemController } from './controller/ItemController';
 
 import * as passport from 'passport';
 import './config/passport.config';
-import { RoleMiddleware } from './config/app.roles';
+
 
 export class Routes {
 
@@ -13,7 +16,9 @@ export class Routes {
     private loginController: LoginController = new LoginController();
     private logoutController: LogoutController = new LogoutController();
     private registerController: RegisterController = new RegisterController();
+    private roleController: RoleController = new RoleController();
     private userController: UserController = new UserController();
+    private itemController: ItemController = new ItemController();
 
     public routes(app): void {
         app.route('/login')
@@ -26,7 +31,14 @@ export class Routes {
             .post(this.registerController.register);
 
         app.route('/users')
-            .get(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['admin', 'superadmin'], 'read'), this.userController.all)
-            .put(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['superadmin', 'admin', 'member'], 'update'), this.userController.edit)
-    }
+            .get(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['admin', 'superadmin']), this.userController.all)
+            .put(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['superadmin', 'admin', 'member']), this.userController.edit);
+    
+        app.route('/roles')
+            .get(passport.authenticate('jwt', {session: false}), this.roleController.all)
+            .post(passport.authenticate('jwt', { session: false }), this.roleController.add);
+        
+        app.route('/items')
+            .get(passport.authenticate('jwt', { session: false}), this.itemController.all, this.roleMiddleware.permit(['superadmin', 'client', 'user', 'guest']));
+        }
 }
