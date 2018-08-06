@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { getRepository, createQueryBuilder } from "typeorm";
+import { getRepository } from "typeorm";
 
 import { Role } from "../entity/Role";
-import { Rule } from "../entity/Rule";
 
 export class RoleController {
   async all(request: Request, response: Response, next: NextFunction) {
@@ -23,41 +22,26 @@ export class RoleController {
     }
   }
 
-  async add(request: Request, response: Response, next: NextFunction) {
+  async create(request: Request, response: Response, next: NextFunction) {
     try {
       // Assign constants
-      const { role_name, resource, action, attributes } = request.body;
+      const { role_name } = request.body;
 
-      // Check if request is empty (Poorly!)
-      if (request.body.role_name === undefined || request.body.resource === undefined) throw ({ error: 'You cannot create an incomplete/empty role.' })
-
-      // Get role repository & rule repository
+      // Get role repository
       const roleRepository = getRepository(Role);
-      const ruleRepository = getRepository(Rule);
+
+      // Check if a role exists
+      const roleExists = await roleRepository.findOne({ role_name });
+
+      if (roleExists) { throw ({ error: 'The role already currently exists.'}) };
 
       // Create a new role
       const role = await roleRepository.create({ role_name });
+      await roleRepository.save(role);
 
-      // Create a new rule
-      const rule = await ruleRepository.create({ resource: resource, action: action, attributes: attributes })
-
-      // Check if role already exists
-      const existingRole = await roleRepository.findOne({ role_name });
-
-      if (existingRole) {
-        rule.roles = [existingRole];
-      } else {
-        await roleRepository.save(role);
-        rule.roles = [role];
-      }
-
-      // Save the rule
-      await ruleRepository.save(rule);
-
-      // Send the response back to the user
       response
         .status(200)
-        .send(rule)
+        .send(role)
     } catch (e) {
       response
         .status(400)

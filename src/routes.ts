@@ -8,6 +8,7 @@ import { ItemController } from './controller/ItemController';
 
 import * as passport from 'passport';
 import './config/passport.config';
+import { RuleController } from './controller/RuleController';
 
 
 export class Routes {
@@ -16,6 +17,7 @@ export class Routes {
     private loginController: LoginController = new LoginController();
     private logoutController: LogoutController = new LogoutController();
     private registerController: RegisterController = new RegisterController();
+    private ruleController: RuleController = new RuleController();
     private roleController: RoleController = new RoleController();
     private userController: UserController = new UserController();
     private itemController: ItemController = new ItemController();
@@ -36,7 +38,11 @@ export class Routes {
     
         app.route('/roles')
             .get(passport.authenticate('jwt', {session: false}), this.roleController.all)
-            .post(passport.authenticate('jwt', { session: false }), this.roleController.add);
+            .post(passport.authenticate('jwt', { session: false }), this.roleController.create);
+        
+        app.route('/rules')
+            .get(passport.authenticate('jwt', {session: false}), this.ruleController.all)
+            .post(passport.authenticate('jwt', {session: false}), this.ruleController.create);
         
         app.route('/items')
             .get(passport.authenticate('jwt', { session: false}), this.itemController.all, this.roleMiddleware.permit(['superadmin', 'client', 'user', 'guest']));
