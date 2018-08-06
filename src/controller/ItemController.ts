@@ -17,4 +17,15 @@ export class ItemController {
         .send(e)
     }
   }
+
+  async create(request: Request, response: Response, next: NextFunction) {
+    try {
+      response
+        .send(request.body)
+    } catch (e) {
+      response
+      .status(400)
+      .send(e)     
+    }
+  }
 }
