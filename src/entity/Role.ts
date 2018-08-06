@@ -9,7 +9,6 @@ export class Role {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // Superadmin, client, user, guest
   @Column()
   role_name: string;
 

@@ -17,5 +17,4 @@ Steps to run this project:
 - https://blog.nodeswat.com/implement-access-control-in-node-js-8567e7b484d1 (Access control in Node)
 
 # Known bugs
-- On creating a role, it will create more than one of the same. This is the same with rules. What I would like to acheieve is a one to one relationship.
-- One creating a new user, a new role will be created. What I want to acheive is that when you create one user it links upto the corresponding role.
+- Throw an error if a rule already exists under the role
