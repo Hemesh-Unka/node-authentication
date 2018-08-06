@@ -28,7 +28,7 @@ export class RuleController {
       const ruleRepository = getRepository(Rule);
 
       // Check if the rule already exists
-      const ruleExits = await ruleRepository.find({ resource, action, attributes });
+      const ruleExits = await ruleRepository.findOne({ resource, action, attributes });
 
       // If rule exists, handle the issue
       if (ruleExits) { throw ({ error: 'The rule already currently exists.' }) };
