@@ -32,6 +32,6 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev src/server.ts"
+    "start:dev": "ts-node-dev src/server.ts"
   }
 }
