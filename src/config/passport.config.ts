@@ -9,10 +9,10 @@ passport.use(new passportJWT.Strategy({
   jwtFromRequest: passportJWT.ExtractJwt.fromHeader('authorization'),
   secretOrKey: process.env.JWT_SECRET
 }, async (payload: any, next: any) => {
-  
+
   try {
     // Find the user specified in the token
-    const user = await getRepository(User).findOne({ uuid: payload.sub });
+    const user = await getRepository(User).findOne({ where: { uuid: payload.sub}, relations: ['role'] });
 
     //If user does not exist
     if (!user) {
@@ -29,7 +29,7 @@ passport.use(new passportJWT.Strategy({
 passport.use(new passportLocal.Strategy({
   usernameField: 'email'
 }, async (email: string, password: string, next: any) => {
-  
+
   try {
     // Find the user from the email
     const user = await getRepository(User).findOne({ email })

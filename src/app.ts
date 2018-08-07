@@ -2,7 +2,6 @@ import "reflect-metadata";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as morgan from "morgan";
-
 import { Routes } from "./routes";
 
 class App {

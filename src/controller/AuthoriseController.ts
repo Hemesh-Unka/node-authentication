@@ -31,9 +31,7 @@ export class AuthoriseController {
       // Throw an error if a rule was not found
       if (!foundRule) { throw ({ error: 'Rule was not found.' }) };
 
-      // Throw an error if a rule already exists under the role
-      const existingRuleOnRole = await ruleRepository.findOne({ where: { id: rule }, relations: ["roles"] });
-      console.log(existingRuleOnRole);
+      // Throw an error if a rule already exists under the role!
 
       // Hook up rule with user role
       foundRule.roles.push(foundUser.role);

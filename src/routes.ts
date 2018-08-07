@@ -2,7 +2,6 @@ import { LoginController } from './controller/LoginController';
 import { LogoutController } from './controller/LogoutController';
 import { RegisterController } from "./controller/RegisterController";
 import { UserController } from './controller/UserController';
-import { RoleMiddleware } from './config/app.roles';
 import { RoleController } from './controller/RoleController';
 import { ItemController } from './controller/ItemController';
 import { RuleController } from './controller/RuleController';
@@ -10,12 +9,12 @@ import { AuthoriseController } from './controller/AuthoriseController';
 
 import * as passport from 'passport';
 import './config/passport.config';
-
-
+import { runInThisContext } from 'vm';
+import { TreeChildren } from '../node_modules/typeorm';
+import { EndPoint } from './utils/endpoint';
 
 export class Routes {
 
-    private roleMiddleware: RoleMiddleware = new RoleMiddleware();
     private loginController: LoginController = new LoginController();
     private logoutController: LogoutController = new LogoutController();
     private registerController: RegisterController = new RegisterController();
@@ -36,8 +35,8 @@ export class Routes {
             .post(this.registerController.register);
 
         app.route('/users')
-            .get(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['admin', 'superadmin']), this.userController.all)
-            .put(passport.authenticate('jwt', { session: false }), this.roleMiddleware.permit(['superadmin', 'admin', 'member']), this.userController.edit);
+            .get(passport.authenticate('jwt', { session: false }), this.userController.all)
+            .put(passport.authenticate('jwt', { session: false }), this.userController.edit);
 
         app.route('/roles')
             .get(passport.authenticate('jwt', { session: false }), this.roleController.all)
@@ -47,10 +46,31 @@ export class Routes {
             .get(passport.authenticate('jwt', { session: false }), this.ruleController.all)
             .post(passport.authenticate('jwt', { session: false }), this.ruleController.create);
 
-        app.route('/items')
-            .get(passport.authenticate('jwt', { session: false }), this.itemController.all, this.roleMiddleware.permit(['superadmin', 'client', 'user', 'guest']));
 
-        app.route('/authorise')
+        const authWithJWT = (endpoint: EndPoint) => [passport.authenticate('jwt', { session: false }), endpoint.authorize, endpoint.method];
+
+        app.route('/items')
+            .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
+            .get(passport.authenticate('jwt', { session: false }), this.itemController.all.authorize, this.itemController.all.method)
+            .get(...[passport.authenticate('jwt', { session: false }), this.itemController.all.authorize, this.itemController.all.method])
+            .get(...authWithJWT(this.itemController.all));
+            //.post(passport.authenticate('jwt', { session: false }), this.itemController.create);
+            
+            app.route('/authorise')
             .post(passport.authenticate('jwt', { session: false }), this.authoriseController.grant)
+            
+        // app.route('/items')
+        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
+        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
+        // app.route('/items/:item_id')
+        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
+        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
+        // app.route('/items/:item_id/region')
+        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
+        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
+        // app.route('/items/:item_id/region/:region_id')
+        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
+        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
+
     }
 }
