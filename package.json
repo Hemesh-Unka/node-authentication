@@ -12,8 +12,10 @@
     "@types/passport": "^0.4.6",
     "@types/passport-jwt": "^3.0.1",
     "@types/passport-local": "^1.0.33",
+    "@types/supertest": "^2.0.5",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "supertest": "^3.1.0",
     "ts-node": "3.3.0",
     "ts-node-dev": "^1.0.0-pre.26",
     "typescript": "^3.0.1"
@@ -36,6 +38,7 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "start:dev": "ts-node-dev src/server.ts"
+    "start:dev": "ts-node-dev src/server.ts",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
   }
 }
