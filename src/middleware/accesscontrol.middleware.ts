@@ -1,55 +1,64 @@
-import { AccessControl } from 'accesscontrol'
-import { Request, Response, NextFunction } from 'express';
-import { getRepository } from 'typeorm';
-import { Rule } from '../entity/Rule';
+import { AccessControl } from "accesscontrol";
+import { Request, Response, NextFunction } from "express";
+import { getRepository } from "typeorm";
+import { Rule } from "../entity/Rule";
 
-export class RoleMiddleware {
-  private async getGrants() {
-    try {
-      // Get rule repository
-      const ruleRepository = getRepository(Rule);
+interface Grant {
+  role: string;
+  resource: string;
+  action: string;
+  attributes: string;
+}
 
-      // Get all rules with associated roles
-      const rules = await ruleRepository.find({ relations: ['roles'] });
+export class AuthorizeMiddleware {
 
-      // Sort rules into AccessControl readable object
-      let grantArray = [];
+  private async getGrants(): Promise<Grant[]> {
+    // Get rule repository
+    const ruleRepository = getRepository(Rule);
 
-      rules.forEach((rule) => {
-        let roleObject = {};
+    // Get all rules with associated roles
+    const rules: Rule[] = await ruleRepository.find({ relations: ["roles"] });
 
-        roleObject['resource'] = rule.resource,
-          roleObject['action'] = rule.action,
-          roleObject['attributes'] = rule.attributes
+    // Sort rules into AccessControl readable object
+    let grants: Grant[] = [];
 
-        rule.roles.forEach((role) => {
-          roleObject['role'] = role.role_name
-          grantArray.push(roleObject);
+    rules.forEach((rule) => {
+      rule.roles.forEach((role) => {
+        grants.push({
+          role: role.role_name,
+          resource: rule.resource,
+          action: rule.action,
+          attributes: rule.attributes
         });
-        return grantArray;
       });
-
-      // Return array
-      return grantArray;
-    } catch (e) {
-      throw new Error(`Error: ${e}`);
-    }
+    });
+    return grants;
   }
 
-  async accessControlMiddleware(request: Request, response: Response, next: NextFunction) {
-    try {
-      // Create a new access control object
-      const ac = new AccessControl();
+  public authorize(action: string, resource: string) {
+    return async (request: Request, response: Response, next: NextFunction) => {
+      try {
+        // Create Access Control object
+        const ac = new AccessControl();
 
-      // Pass in grants to access control
-      ac.setGrants(this.getGrants());
+        // Set Grants
+        ac.setGrants(await this.getGrants());
 
+        // Get current user for request
+        const user = request.user;
 
+        // Check for permissions
+        const permission = await ac.can(user.role.role_name)[action](resource);
+        if (!permission.granted) throw ({ error: "Unauthroized access" });
 
-      
-      next();
-    } catch (e) {
-      next();
-    }
+        // Set up permission to be used on later on down the track
+        response.locals.ac = ac;
+        next();
+      } catch (e) {
+        response
+          .send(e)
+          .status(401);
+      }
+    };
   }
 }

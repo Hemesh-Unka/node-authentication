@@ -1,34 +1,49 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { User } from "../entity/User";
 
-export class UserController {
+import { User } from "../entity/User";
+import { AuthorizeMiddleware } from "../middleware/accesscontrol.middleware";
+import { EndPoint } from "../utils/endpoint";
+
+class UserInterface {
 
     async all(request: Request, response: Response, next: NextFunction) {
         try {
             const userRepository = getRepository(User);
             const users = await userRepository.find();
             response
-                .send(users)
+                .send(users);
         } catch (e) {
             response
                 .status(400)
-                .send(e)
+                .send(e);
         }
     }
 
-    async edit(request: Request, response: Response, next: NextFunction) {
+    async one(request: Request, response: Response, next: NextFunction) {
+        try {
+            const userRepository = getRepository(User);
+            const user = await userRepository.findOne({ email: request.body.email });
+            response
+                .send(user);
+        } catch (e) {
+            response
+                .status(400)
+                .send(e);
+        }
+    }
 
+    async update(request: Request, response: Response, next: NextFunction) {
         try {
             // Find the user
             let userToUpdate = await getRepository(User).findOne({ email: request.body.email });
 
             // If the user does not exists
-            if (!userToUpdate) throw ({ error: 'Email does not exist.' });
+            if (!userToUpdate) throw ({ error: "Email does not exist." });
 
-            // If the requested user to edit is not able to edit (This maybe fixed by access control lists)            
+            // If the requested user to edit is not able to edit (This maybe fixed by access control lists)
             // Need to go over this to check it out once again
-            if (userToUpdate.uuid !== request.user.uuid) throw ({ error: 'Unable to edit another user' });
+            if (userToUpdate.uuid !== request.user.uuid) throw ({ error: "Unable to edit another user" });
 
             // Edit the user
             userToUpdate.email = request.body.email;
@@ -37,35 +52,31 @@ export class UserController {
             // Save the new user
             let savedUser = await getRepository(User).save(userToUpdate);
             response
-                .send(savedUser)
+                .send(savedUser);
         } catch (e) {
             response
                 .status(400)
-                .send(e)
+                .send(e);
         }
+    }
+}
+
+export class UserController {
+    private userInterface: UserInterface = new UserInterface();
+    private authorize: AuthorizeMiddleware = new AuthorizeMiddleware();
+
+    public readonly all: EndPoint = {
+        authorize: this.authorize.authorize("read", "user"),
+        method: this.userInterface.all
     };
 
-    // async one(request: Request, response: Response, next: NextFunction) {
-    //     return this.userRepository.findOne(request.params.id);
-    // }
+    public readonly update: EndPoint = {
+        authorize: this.authorize.authorize("update", "user"),
+        method: this.userInterface.update
+    };
 
-    // async save(request: Request, response: Response, next: NextFunction) {
-    //     // these models should be extracted into a model class
-    //     // ISSUE: when password was saved in another route - ie '/' route - password would be stored in plain-text
-    //     // const hashedPassword = await bcrypt.hash(request.body.password, 10);
-    //     // request.body.password = hashedPassword;
-    //     // FIX: Needed to create user/then save
-
-    //     let user = this.userRepository.create(request.body);
-    //     return await this.userRepository.save(user);
-    // }
-
-    // async remove(request: Request, response: Response, next: NextFunction) {
-    //     let userToRemove = await this.userRepository.findOne(request.params.id);
-    //     await this.userRepository.remove(userToRemove);
-    // }
-
-    // async findByToken(token) {
-    //     console.log(jwt.verify(token, process.env.JWT_SECRET));
-    // }
+    public readonly one: EndPoint = {
+        authorize: this.authorize.authorize("read", "user"),
+        method: this.userInterface.one
+    };
 }

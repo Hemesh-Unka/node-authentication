@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
-import * as JWT from 'jsonwebtoken';
+import * as JWT from "jsonwebtoken";
 
 import { User } from "../entity/User";
 import { Role } from "../entity/Role";
@@ -20,7 +20,7 @@ export class RegisterController {
 
       // Check if existing user exists
       const existingUser = await userRespository.findOne({ email });
-      if (existingUser) throw ({ error: 'Email is already in use.' })
+      if (existingUser) throw ({ error: "Email is already in use." });
 
       // Create a new user
       const user = userRespository.create({ email, password });
@@ -36,14 +36,14 @@ export class RegisterController {
       } else {
         // Assign the role to a user
         user.role = role;
-      };
+      }
 
       // Save user
       await userRespository.save(user);
 
       // Setup token
       const token = JWT.sign({
-        iss: 'API',
+        iss: "API",
         sub: user.uuid,
         iat: new Date().getTime(),
         exp: new Date().setDate(new Date().getDate() + 1)
@@ -59,7 +59,7 @@ export class RegisterController {
     } catch (e) {
       response
         .status(404)
-        .send(e)
+        .send(e);
     }
-  };
-};
+  }
+}

@@ -1,17 +1,14 @@
-import { LoginController } from './controller/LoginController';
-import { LogoutController } from './controller/LogoutController';
+import { LoginController } from "./controller/LoginController";
+import { LogoutController } from "./controller/LogoutController";
 import { RegisterController } from "./controller/RegisterController";
-import { UserController } from './controller/UserController';
-import { RoleController } from './controller/RoleController';
-import { ItemController } from './controller/ItemController';
-import { RuleController } from './controller/RuleController';
-import { AuthoriseController } from './controller/AuthoriseController';
-
-import * as passport from 'passport';
-import './config/passport.config';
-import { runInThisContext } from 'vm';
-import { TreeChildren } from '../node_modules/typeorm';
-import { EndPoint } from './utils/endpoint';
+import { UserController } from "./controller/UserController";
+import { RoleController } from "./controller/RoleController";
+import { ItemController } from "./controller/ItemController";
+import { RuleController } from "./controller/RuleController";
+import { AuthorizeController } from "./controller/AuthorizeController";
+import { EndPoint } from "./utils/endpoint";
+import * as passport from "passport";
+import "./config/passport.config";
 
 export class Routes {
 
@@ -22,55 +19,79 @@ export class Routes {
     private roleController: RoleController = new RoleController();
     private userController: UserController = new UserController();
     private itemController: ItemController = new ItemController();
-    private authoriseController: AuthoriseController = new AuthoriseController();
+    private authorizeController: AuthorizeController = new AuthorizeController();
 
     public routes(app): void {
-        app.route('/login')
-            .post(passport.authenticate('local', { session: false }), this.loginController.login);
+        const authorizationWithJWT = (endpoint: EndPoint) => [passport.authenticate("jwt", { session: false }), endpoint.authorize, endpoint.method];
+        const withJWT = (endpoint: EndPoint) => [passport.authenticate("jwt", { session: false }), endpoint.method];
 
-        app.route('/logout')
-            .get(passport.authenticate('jwt', { session: false }), this.logoutController.logout);
+        app.route("/login")
+            .post(passport.authenticate("local", { session: false }), this.loginController.login);
 
-        app.route('/register')
+        app.route("/logout")
+            .get(...withJWT(this.logoutController.logout));
+
+        app.route("/register")
             .post(this.registerController.register);
 
-        app.route('/users')
-            .get(passport.authenticate('jwt', { session: false }), this.userController.all)
-            .put(passport.authenticate('jwt', { session: false }), this.userController.edit);
+        app.route("/users")
+            .get(...authorizationWithJWT(this.userController.all))
+            .put(...authorizationWithJWT(this.userController.update))
+            .post(...authorizationWithJWT(this.userController.one));
 
-        app.route('/roles')
-            .get(passport.authenticate('jwt', { session: false }), this.roleController.all)
-            .post(passport.authenticate('jwt', { session: false }), this.roleController.create);
+        app.route("/roles")
+            .get(...authorizationWithJWT(this.roleController.all))
+            .post(...authorizationWithJWT(this.roleController.create));
 
-        app.route('/rules')
-            .get(passport.authenticate('jwt', { session: false }), this.ruleController.all)
-            .post(passport.authenticate('jwt', { session: false }), this.ruleController.create);
+        app.route("/rules")
+            .get(...authorizationWithJWT(this.ruleController.all))
+            .post(...authorizationWithJWT(this.ruleController.create));
 
+        app.route("/items")
+            .get(...authorizationWithJWT(this.itemController.all))
+            .post(...authorizationWithJWT(this.itemController.create));
 
-        const authWithJWT = (endpoint: EndPoint) => [passport.authenticate('jwt', { session: false }), endpoint.authorize, endpoint.method];
-
-        app.route('/items')
-            .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
-            .get(passport.authenticate('jwt', { session: false }), this.itemController.all.authorize, this.itemController.all.method)
-            .get(...[passport.authenticate('jwt', { session: false }), this.itemController.all.authorize, this.itemController.all.method])
-            .get(...authWithJWT(this.itemController.all));
-            //.post(passport.authenticate('jwt', { session: false }), this.itemController.create);
-            
-            app.route('/authorise')
-            .post(passport.authenticate('jwt', { session: false }), this.authoriseController.grant)
-            
-        // app.route('/items')
-        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
-        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
-        // app.route('/items/:item_id')
-        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
-        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
-        // app.route('/items/:item_id/region')
-        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
-        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
-        // app.route('/items/:item_id/region/:region_id')
-        //     .get(passport.authenticate('jwt', { session: false }), authorize('read:any', 'items'), this.itemController.all)
-        //     .post(passport.authenticate('jwt', { session: false }), this.itemController.create);
-
+        app.route("/authorise")
+            .post(...authorizationWithJWT(this.authorizeController.grant));
     }
 }
+
+    // rules = [
+    //     "items:delete",
+    //     "items:post",
+    //     "items:get",
+    //     "items:update",
+    //     "photos:delete",
+    //     "photos:post",
+    //     "photos:get",
+    //     "photos:update"
+    // ]
+
+    // groups: [{
+    //     name: "admin",
+    //     rules: ["items:delete", "items:get"]
+    // },{
+    //     name: "user",
+    //     rules: ["items:post", "items:update"]
+    // }]
+
+    // user: {
+    //     groups: ["user", "admin"]
+    // }
+
+    // end_rules_of_user = ["items:delete", "items:get", "items:post", "items:update"]
+
+    // authorize = (rule: string) => end_rules_of_user.includes(rule);
+    // /items
+    //      delete
+    //      post
+    //      get
+    //      update
+
+    // /photos
+    //      delete
+    //      post
+    //      get
+    //      update
+
+    // authorize("item:create")

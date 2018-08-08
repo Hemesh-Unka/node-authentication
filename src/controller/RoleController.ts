@@ -2,23 +2,23 @@ import { Request, Response, NextFunction } from "express";
 import { getRepository } from "typeorm";
 
 import { Role } from "../entity/Role";
+import { AuthorizeMiddleware } from "../middleware/accesscontrol.middleware";
+import { EndPoint } from "../utils/endpoint";
 
-export class RoleController {
+class RoleInterface {
   async all(request: Request, response: Response, next: NextFunction) {
     try {
       const roleRepository = getRepository(Role);
       const roles = await roleRepository.find();
 
-      // If no roles exist
-      if (roles === undefined || roles.length === 0) throw ({ error: 'No roles currently exist.' });
+      if (roles === undefined || roles.length === 0) throw ({ error: "No roles currently exist." });
 
-      // Send the current roles
       response
-        .send(roles)
+        .send(roles);
     } catch (e) {
       response
         .status(400)
-        .send(e)
+        .send(e);
     }
   }
 
@@ -33,7 +33,7 @@ export class RoleController {
       // Check if a role exists
       const roleExists = await roleRepository.findOne({ role_name });
 
-      if (roleExists) { throw ({ error: 'The role already currently exists.'}) };
+      if (roleExists) { throw ({ error: "The role already currently exists." }); }
 
       // Create a new role
       const role = await roleRepository.create({ role_name });
@@ -41,11 +41,26 @@ export class RoleController {
 
       response
         .status(200)
-        .send(role)
+        .send(role);
     } catch (e) {
       response
         .status(400)
-        .send(e)
+        .send(e);
     }
   }
+}
+
+export class RoleController {
+  private roleInterface: RoleInterface = new RoleInterface();
+  private authorize: AuthorizeMiddleware = new AuthorizeMiddleware();
+
+  public readonly all: EndPoint = {
+    authorize: this.authorize.authorize("read", "role"),
+    method: this.roleInterface.all
+  };
+
+  public readonly create: EndPoint = {
+    authorize: this.authorize.authorize("create", "role"),
+    method: this.roleInterface.create
+  };
 }
