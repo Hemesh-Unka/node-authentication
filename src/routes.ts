@@ -23,13 +23,12 @@ export class Routes {
 
     public routes(app): void {
         const authorizationWithJWT = (endpoint: EndPoint) => [passport.authenticate("jwt", { session: false }), endpoint.authorize, endpoint.method];
-        const withJWT = (endpoint: EndPoint) => [passport.authenticate("jwt", { session: false }), endpoint.method];
 
         app.route("/login")
             .post(passport.authenticate("local", { session: false }), this.loginController.login);
 
         app.route("/logout")
-            .get(...withJWT(this.logoutController.logout));
+            .get(...authorizationWithJWT(this.logoutController.logout));
 
         app.route("/register")
             .post(this.registerController.register);
