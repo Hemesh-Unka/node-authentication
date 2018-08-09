@@ -41,14 +41,14 @@ export = [
       "src/entity/**/*.ts"
     ],
     "migrations": [
-      "src/migration/**/*.ts"
+      "src/tests/migration/**/*.ts"
     ],
     "subscribers": [
       "src/subscriber/**/*.ts"
     ],
     "cli": {
       "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
+      "migrationsDir": "src/tests/migration",
       "subscribersDir": "src/subscriber"
     }
   }
