@@ -61,4 +61,8 @@ export class AuthorizeMiddleware {
       }
     };
   }
+
+  public async allowAll(request: Request, response: Response, next: NextFunction) {
+    next();
+  }
 }
