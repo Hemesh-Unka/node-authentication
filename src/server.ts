@@ -1,38 +1,15 @@
-import app from './app';
-import * as https from 'https';
-import * as fs from 'fs';
-import * as path from 'path';
+import app from "./app";
 import { createConnection } from "typeorm";
-import { create } from 'domain';
 
 const PORT: number = 3000;
 
-// const httpsOptions: object = {
-//   key: fs.readFileSync(path.join(__dirname, './config/key.pem')),
-//   cert: fs.readFileSync(path.join(__dirname, './config/cert.pem'))
-// };
-
 createConnection().then(async connection => {
-  console.log(`TypeORM connection created on port ${process.env.DB_PORT}.`)
-
-  // Https server setup
-  // https.createServer(httpsOptions, app).listen(PORT, () => {
-  //   console.log(`Express server has started on port ${PORT}.`);
-  // });
+  console.log(`TypeORM connection created on port ${process.env.DB_PORT}.`);
 
   app.listen(PORT, () => {
     console.log(`Express server has started on port ${PORT}.`);
   });
 
-  // // Set up some test users
-  // await connection.manager.save(connection.manager.create(User, {
-  //   email: "timbersaw@isemail.com",
-  //   password: "timbersaw123"
-  // }));
-
-  // await connection.manager.save(connection.manager.create(User, {
-  //   email: "phantomassassin",
-  //   password: "phantomassaasin123"
-  // }));
-
 }).catch(e => console.log(e));
+
+export default app;
