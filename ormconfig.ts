@@ -7,9 +7,8 @@ export = [
     "port": process.env.DB_PORT,
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "test",
+    "database": "api_authentication",
     "synchronize": true,
-    "dropSchema": false,
     "logging": false,
     "entities": [
       "src/entity/**/*.ts"
@@ -33,10 +32,10 @@ export = [
     "port": process.env.DB_PORT,
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
-    "database": "postgres",
+    "database": "api_authentication_test",
     "synchronize": true,
     "logging": false,
-    "dropSchema": true,
+    "dropSchema": false,
     "entities": [
       "src/entity/**/*.ts"
     ],
