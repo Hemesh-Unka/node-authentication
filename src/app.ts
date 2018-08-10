@@ -4,7 +4,7 @@ import * as bodyParser from "body-parser";
 import * as morgan from "morgan";
 import { Routes } from "./routes";
 
-class App {
+export class App {
     public app: express.Application;
     public routePrv: Routes = new Routes();
 
@@ -17,9 +17,7 @@ class App {
     private config(): void {
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use(bodyParser.json());
-        if (process.env.NODE_ENV !== "test") {
-            this.app.use(morgan("dev"));
-        }
+        // this.app.use(morgan("dev"));
     }
 }
 
