@@ -1,0 +1,18 @@
+[
+  {
+    "email": "superadmin@example.com",
+    "password": "superadmin"
+  },
+  {
+    "email": "admin@example.com",
+    "password": "admin"
+  },
+  {
+    "email": "user@example.com",
+    "password": "user"
+  },
+  {
+    "email": "guest@example.com",
+    "password": "guest"
+  }
+]
