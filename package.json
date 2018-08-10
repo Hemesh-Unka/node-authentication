@@ -39,6 +39,6 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "start:dev": "ts-node-dev src/server.ts",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts --exit"
+    "test": "NODE_ENV=test mocha -r ts-node/register src/**/*.spec.ts --exit"
   }
 }
