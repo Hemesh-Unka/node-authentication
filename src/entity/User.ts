@@ -1,9 +1,9 @@
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from "bcryptjs";
 
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Generated, ManyToOne } from "typeorm";
 import { IsEmail } from "class-validator";
 
-import { Role } from './Role';
+import { Role } from "./Role";
 
 @Entity()
 export class User {
@@ -12,7 +12,7 @@ export class User {
     id: number;
 
     @Column()
-    @Generated('uuid')
+    @Generated("uuid")
     uuid: string;
 
     @Column({ unique: true })
@@ -37,7 +37,7 @@ export class User {
 
     async validatePassword(plainTextPassword: string) {
         try {
-            return await bcrypt.compare(plainTextPassword, this.password)
+            return await bcrypt.compare(plainTextPassword, this.password);
         } catch (error) {
             throw new Error(error);
         }

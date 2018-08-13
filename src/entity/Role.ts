@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany } from "typeorm";
 
-import { Rule } from './Rule';
+import { Rule } from "./Rule";
 import { User } from "./User";
 
 @Entity()
