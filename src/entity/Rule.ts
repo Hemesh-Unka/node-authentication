@@ -5,7 +5,7 @@ import { Role } from "./Role";
 export class Rule {
 
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
   resource: string;
