@@ -1,25 +1,28 @@
 import { expect } from "chai";
 import * as request from "supertest";
 import { startServer } from "../bootstrap";
+import { SeedUtils } from "../utils/seed";
 
-const email = "superadmin@example.com";
-const password = "superadmin";
-const assigned_role = "superadmin";
+const seedUtils = new SeedUtils();
 
-before(async () => {
+before("start server", async () => {
   await startServer();
+});
+
+before("seed database", async () => {
+  await seedUtils.seedDB();
 });
 
 describe("Register", () => {
   describe("POST /register", () => {
-    it("it should register a new user", async () => {
+    it("registers a new user", async () => {
       const response = await request("http://localhost:3000")
         .post("/register")
         .set("Accept", "application/json")
         .send({
-          email,
-          password,
-          assigned_role
+          email: "superadmin1@example.com",
+          password: "superadmin1",
+          assigned_role: "superadmin"
         });
 
       expect(response.status).to.equal(200);
@@ -27,14 +30,14 @@ describe("Register", () => {
       expect(response.body).to.have.property("token");
     });
 
-    it("it should not be able to register another user using the same password", async () => {
+    it("cannot register another user using the same email", async () => {
       const response = await request("http://localhost:3000")
         .post("/register")
         .set("Accept", "application/json")
         .send({
-          email,
-          password,
-          assigned_role
+          email: "superadmin1@example.com",
+          password: "superadmin1",
+          assigned_role: "superadmin"
         });
 
       expect(response.status).to.equal(404);

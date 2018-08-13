@@ -1,36 +1,10 @@
 import "reflect-metadata";
-import { Connection, getRepository, getConnection } from "typeorm";
-import { createTypeormConn } from "./createTypeormConn";
+import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import { Role } from "../entity/Role";
 import { Rule } from "../entity/Rule";
 
 export class SeedUtils {
-  private connection: Connection;
-
-  /**
-  * Opens the database connection
-  */
-  async startDbConnection() {
-    try {
-      this.connection = (await createTypeormConn());
-    } catch (error) {
-      throw new Error(`ERROR: Connecting to db: ${error}`);
-    }
-  }
-
-  /**
-  * Closes the database connection
-  */
-  async closeDbConnection() {
-    try {
-      if (this.connection.isConnected) {
-        await (await this.connection).close();
-      }
-    } catch (error) {
-      throw new Error(`ERROR: Disconnecting from db: ${error}`);
-    }
-  }
 
   /**
   * Seed the database
