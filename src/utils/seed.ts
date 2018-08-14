@@ -53,11 +53,25 @@ export class SeedUtils {
     try {
       const ruleRepository = await getRepository(Rule);
 
+      const superadmin = new Role();
+      superadmin.role_name = "superadmin";
+
+      const admin = new Role();
+      admin.role_name = "admin";
+
+      const user = new Role();
+      user.role_name = "user";
+
+      const guest = new Role();
+      guest.role_name = "guest";
+
       const rules = [
-        { resource: "items", action: "create", attributes: "*" },
-        { resource: "items", action: "read", attributes: "*" },
-        { resource: "users", action: "read", attributes: "*" },
-        { resource: "users", action: "update", attributes: "*" }
+        { resource: "items", action: "create", attributes: "*", roles: [superadmin] },
+        { resource: "users", action: "read", attributes: "*", roles: [superadmin, guest] },
+        { resource: "items", action: "read", attributes: "*", roles: [superadmin, guest] },
+        { resource: "users", action: "update", attributes: "*", roles: [superadmin] },
+        { resource: "rules", action: "create", attributes: "*", roles: [superadmin] },
+        { resource: "rules", action: "read", attributes: "*", roles: [superadmin] }
       ];
 
       ruleRepository.save(rules);
