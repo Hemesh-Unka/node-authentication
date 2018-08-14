@@ -16,6 +16,6 @@ export class Rule {
   @Column()
   attributes: string;
 
-  @ManyToMany(type => Role, role => role.rules)
+  @ManyToMany(type => Role, role => role.rules, { cascade: true })
   roles: Role[];
 }
