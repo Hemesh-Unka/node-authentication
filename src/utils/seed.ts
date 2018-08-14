@@ -71,7 +71,9 @@ export class SeedUtils {
         { resource: "items", action: "read", attributes: "*", roles: [superadmin, guest] },
         { resource: "users", action: "update", attributes: "*", roles: [superadmin] },
         { resource: "rules", action: "create", attributes: "*", roles: [superadmin] },
-        { resource: "rules", action: "read", attributes: "*", roles: [superadmin] }
+        { resource: "rules", action: "read", attributes: "*", roles: [superadmin] },
+        { resource: "role", action: "create", attributes: "*", roles: [superadmin] },
+        { resource: "role", action: "read", attributes: "*", roles: [superadmin] }
       ];
 
       ruleRepository.save(rules);
