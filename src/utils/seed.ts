@@ -67,9 +67,9 @@ export class SeedUtils {
 
       const rules = [
         { resource: "items", action: "create", attributes: "*", roles: [superadmin] },
-        { resource: "users", action: "read", attributes: "*", roles: [superadmin, guest] },
+        { resource: "user", action: "read", attributes: "*", roles: [superadmin, guest] },
         { resource: "items", action: "read", attributes: "*", roles: [superadmin, guest] },
-        { resource: "users", action: "update", attributes: "*", roles: [superadmin] },
+        { resource: "user", action: "update", attributes: "*", roles: [superadmin] },
         { resource: "rules", action: "create", attributes: "*", roles: [superadmin] },
         { resource: "rules", action: "read", attributes: "*", roles: [superadmin] },
         { resource: "role", action: "create", attributes: "*", roles: [superadmin] },
