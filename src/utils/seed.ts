@@ -82,4 +82,31 @@ export class SeedUtils {
       throw new Error(`ERROR: Seeding rules: ${error}`);
     }
   }
+
+  /**
+  * Seed roles
+  */
+
+  // async seedRoles() {
+  //   try {
+  //     const superadmin = new Role();
+  //     superadmin.role_name = "superadmin";
+
+  //     const admin = new Role();
+  //     admin.role_name = "admin";
+
+  //     const user = new Role();
+  //     user.role_name = "user";
+
+  //     const guest = new Role();
+  //     guest.role_name = "guest";
+
+  //     const roles = [superadmin, admin, user, guest];
+
+  //     await getRepository(Role).save(roles);
+
+  //   } catch (error) {
+  //     throw new Error(`ERROR: Seeding roles: ${error}`);
+  //   }
+  // }
 }
