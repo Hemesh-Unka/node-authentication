@@ -20,4 +20,4 @@ Steps to run this project:
 - Throw an error if a rule already exists under the role
 
 # Handover
-- Having issues to mock an http request. Would like to mock out a request in the Role to trigger the empty roles error. Could carry this out by deleting a roles (key contraints) or mock the request out.
+- Having issues to mock an http request. What I Would like to acheive is a mock request in the Role controller to to return an error. I could do this two ways: arry this out by deleting all roles (key contraints) or mock the request out using sinon (harder than it should be).
